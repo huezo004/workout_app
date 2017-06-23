@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Work-it-out</title>
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Work it out!</h1>
+      <h3>Track your workout life!</h3>
+      <hr>
+      <a href= "/add_race"><button type="button" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-plus"></span> Add New Race</button></a>
+
+      <a href= "/add_workout"><button type="button" class="btn btn-danger btn-lg"><span class="glyphicon glyphicon-plus"></span> Add New Workout</button></a>
+
+    </div>
+    <div class="row">
+
+      <div class="col-lg-12">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><strong>Add New User</strong></h3>
+          </div>
+          <div class="panel-body">
+            <input type="text" id="new-user" class="form-control">
+            <br>
+            <div class="text-right">
+              <button type="submit" class="btn btn-primary btn-md" id="add-btn"><span class="glyphicon glyphicon-search"></span> Add </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><strong>User Search</strong></h3>
+          </div>
+          <div class="panel-body">
+            <input type="text" id="character-search" class="form-control">
+            <br>
+            <div class="text-right">
+              <button type="submit" class="btn btn-primary btn-md" id="search-btn"><span class="glyphicon glyphicon-search"></span> Search</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><strong>Workouts</strong></h3>
+          </div>
+          <div class="panel-body">
+            <div class="well">
+              <h2 id="name"></h2>
+              <div id="stats">
+                <h3><strong>Activity:</strong> <span id="role"></span></h3>
+                <h3><strong>Duration:</strong> <span id="age"></span></h3>
+                <h3><strong>Date:</strong> <span id="force-points"></span></h3>
+                <h3><strong>Completed:</strong> <span id="force-pointss"></span></h3>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+         <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><strong>Races</strong></h3>
+          </div>
+          <div class="panel-body">
+            <div class="well">
+              <h2  id="name2"></h2>
+              <div id="stats2">
+                <h3><strong>Race:</strong> <span id="role2"></span></h3>
+                <h3><strong>Placement:</strong> <span id="age2"></span></h3>
+                <h3><strong>Date:</strong> <span id="force-points2"></span></h3>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+  $("#add-btn").on("click", function(){
+
+    event.preventDefault();
+
+    var newUser = $("#new-user").val().trim();
+
+    alert(newUser); 
+
+     $.post("/newuser", newUser)
+
+      .done(function(data) {
+
+        console.log(data);
+
+        alert("Adding new User to db...");
+      });
+
+  }); 
+    
+    $("#search-btn").on("click", function() {
+
+       var searchedCharacter = $("#character-search").val().trim();
+      
+       $.get("/races/" + searchedCharacter , function(data) {
+
+        //data.length shows # of entries /Handlebars here 
+        //Always start with index 1 (index 0 will always show null info)
+
+        console.log(data); 
+
+        if (data) {
+          $("#stats2").show();
+          $("#role2").text(data[1].race);
+          $("#age2").text(data[1].placemet);
+          $("#force-points2").text(data[1].date);
+        }
+
+        else {
+          alert("noooo dataa"); 
+          $("#stats2").hide();
+        }
+      
+      });
+
+     $.get("/workouts/"+ searchedCharacter , function(data) {
+
+        //data.length shows # of entries size/Handlebars here 
+        //Always start with index 1 (index 0 will always show null info)
+
+        if (data) {
+          $("#stats").show();
+          $("#role").text(data[1].activity);
+          $("#age").text(data[1].duration);
+          $("#force-points").text(data[1].date);
+        }
+        else {
+          alert("noooo dataa"); 
+          $("#stats").hide();
+        }
+      
+      }); 
+
+   });         
+   
+  </script>
+
+</body>
+</html>
